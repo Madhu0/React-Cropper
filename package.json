@@ -1,0 +1,25 @@
+{
+  "name": "react-cropper",
+  "version": "1.0.0",
+  "description": "A simple image cropping tool.",
+  "main": "index.js",
+  "scripts": {
+    "test": "start",
+    "build": "webpack"
+  },
+  "author": "Madhusudhan Reddy K",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4"
+  },
+  "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-preset-env": "^1.5.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "webpack": "^2.6.1"
+  }
+}
