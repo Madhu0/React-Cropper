@@ -23,6 +23,10 @@ class InputHelper extends Component {
     reader.readAsDataURL(file);
   }
 
+  handleImageLoad = (e) => {
+    console.log(e);
+  }
+
   handleClick = (e) => {
     if (this.ref) {
       this.ref.rotate(90)
@@ -31,7 +35,7 @@ class InputHelper extends Component {
 
   render(){
     return (<div>
-      {!this.state.image ? <input type="file" accept="image/x-png,image/gif,image/jpeg" onChange={this.handleInputChange} /> : <ImageCropper src={this.state.image} ref = {(el) => { this.ref = el; }} />}
+      {!this.state.image ? <input type="file" accept="image/x-png,image/gif,image/jpeg" onChange={this.handleInputChange} /> : <ImageCropper src={this.state.image} ref = {(el) => { this.ref = el; }} componentDidMount={this.handleImageLoad} onLoad={this.handleImageLoad} componentDidUpdate={this.handleImageLoad} />}
       <button onClick={this.handleClick}>Rotate</button>
     </div>);
   }
