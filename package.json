@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "start",
+    "cleanbuild": "rm -r dist",
     "build": "webpack"
   },
   "author": "Madhusudhan Reddy K",
