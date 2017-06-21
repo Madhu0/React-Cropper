@@ -9,9 +9,6 @@ export default class ImageCropper extends React.Component {
 
   constructor(props) {
     super(props);
-<<<<<<< Updated upstream
-    this.state = {};
-=======
     this.state = {
       pos: {
         x1: 0,
@@ -22,14 +19,19 @@ export default class ImageCropper extends React.Component {
       showCropBox: false,
     };
     this.startingCoords = {},
->>>>>>> Stashed changes
     this.canvas = document.createElement('canvas');
     this.canvas.addEventListener('mousedown', (e) => { this.handleCanvasMouseDown(e); });
     // this.canvas.addEventListener('mousemove', (e) => { this.handleCanvasMouseMove(e); });
     this.canvas.addEventListener('mouseup', (e) => { this.handleCanvasMouseUp(e); });
+    this.canvas.addEventListener('mouseout', (e) => { this.handleCanvasMouseOut(e) });
     // this.canvas.onMouseUp = this.handleCanvasMouseUp;
     this.ctx = this.canvas.getContext('2d');
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  handleCanvasMouseOut = (e) => {
+    this.keyDown = false;
+    this.canvas.removeEventListener('mousemove', this.handleCanvasMouseMove);
   }
 
   handleCanvasMouseDown = (e) => {
@@ -38,6 +40,7 @@ export default class ImageCropper extends React.Component {
     this.startingCoords.y = e.pageY;
     this.canvas.addEventListener('mousemove', (e) => { this.handleCanvasMouseMove(e); });
     this.keyDown = true;
+    this.rectangleElement = document.getElementById('rectangle');
     this.setState({
       showCropBox: true,
     });
@@ -47,15 +50,15 @@ export default class ImageCropper extends React.Component {
     // console.log("in mouse move", e);
     this.mousePosition = e.pageX;
     this.mousePosition = e.pageY;
-    const el = document.getElementById('rectangle');
     const pos = {};
+    const el = this.rectangleElement;
     if (el && this.keyDown) {
       const x = e.pageX;
       const y = e.pageY;
-      pos.left = ((this.startingCoords.x < x) ? this.startingCoords.x : x) + 'px';
-      pos.top = ((this.startingCoords.y < y) ? this.startingCoords.y : y) + 'px';
-      pos.height = Math.abs(y - this.startingCoords.y) + 'px';
-      pos.width = Math.abs(x - this.startingCoords.x) + 'px';
+      pos.left = (this.startingCoords.x < x) ? this.startingCoords.x : x;
+      pos.top = (this.startingCoords.y < y) ? this.startingCoords.y : y;
+      pos.height = Math.abs(y - this.startingCoords.y);
+      pos.width = Math.abs(x - this.startingCoords.x);
       this.setState({
         pos,
       });
@@ -68,12 +71,12 @@ export default class ImageCropper extends React.Component {
     const x = e.pageX;
     const y = e.pageY;
     const pos = {};
-    pos.left = ((this.startingCoords.x < x) ? this.startingCoords.x : x) + 'px';
-    pos.top = ((this.startingCoords.y < y) ? this.startingCoords.y : y) + 'px';
-    pos.height = Math.abs(y - this.startingCoords.y) + 'px';
-    pos.width = Math.abs(x - this.startingCoords.x) + 'px';
+    pos.left = (this.startingCoords.x < x) ? this.startingCoords.x : x;
+    pos.top = (this.startingCoords.y < y) ? this.startingCoords.y : y;
+    pos.height = Math.abs(y - this.startingCoords.y);
+    pos.width = Math.abs(x - this.startingCoords.x);
     this.keyDown = false;
-    this.canvas.removeEventListner('mousemove', this.handleCanvasMouseMove);
+    this.canvas.removeEventListener('mousemove', this.handleCanvasMouseMove);
     this.setState({
       pos,
     });
@@ -109,7 +112,12 @@ export default class ImageCropper extends React.Component {
   handleCrop = () => {
     const tempCanvas = document.createElement('canvas');
     const tempCtx = tempCanvas.getContext('2d');
-    tempCtx.drawImage(this.canvas, 100, 100, 200, 200, 0, 0, 200, 200);
+    const cnavasPos = this.canvas.getBoundingClientRect();
+    const sourceX = this.state.pos.left - cnavasPos.left - window.scrollX;
+    const sourceY = this.state.pos.top - cnavasPos.top - window.scrollY;
+    tempCanvas.height = this.state.pos.height;
+    tempCanvas.width = this.state.pos.width;    
+    tempCtx.drawImage(this.canvas, sourceX, sourceY, this.state.pos.width, this.state.pos.height, 0, 0, this.state.pos.width, this.state.pos.height);
     const src = tempCanvas.toDataURL('image/png', 1);
     this.setState({
       imageSrc: src,
@@ -127,8 +135,6 @@ export default class ImageCropper extends React.Component {
     console.log("data", data);
   }
 
-<<<<<<< Updated upstream
-=======
   handleImageDragStart = (e) => {
     this.startingCoords = {
       x: e.screenX,
@@ -157,7 +163,6 @@ export default class ImageCropper extends React.Component {
     console.log(e);
   }
 
->>>>>>> Stashed changes
   render() {
     console.log("canvas ", this.canvas);
     const { src, containerClassName } = this.props;
@@ -172,16 +177,6 @@ export default class ImageCropper extends React.Component {
       this.ctx.drawImage(image, 0, 0, image.width, image.height);
     }
     image.src = src;
-<<<<<<< Updated upstream
-    return (<div className={containerClassName}> 
-      <div id="grooot" onDrop={this.handleDrop} onDragOver={(e) => { e.preventDefault(); }} />
-      <div className="cropper" draggable={true} onDrag={ (e) => { this.handleDrag(e, 0) } } style={{ left:this.state.pos.left, right:this.state.pos.right }}>
-        <span className="left" id="left" onDrag={ (e) => { this.handleDrag(e, 0) } } />
-        <span className="right" id="right" onDrag={ (e) => { this.handleDrag(e, 1) } }/>
-        <span className="top" id="top" onDrag={ (e) => { this.handleDrag(e, 2) } } />
-        <span className="bottom" id="bottom" onDrag={ (e) => { this.handleDrag(e, 3) } } />
-      </div>
-=======
     let x1 = this.state.pos.x1;
     let x2 = this.state.pos.x2;
     let y1 = this.state.pos.y1;
@@ -200,9 +195,13 @@ export default class ImageCropper extends React.Component {
     }
     console.log('position', this.state.pos);
     return (<div className={containerClassName}> 
+      <div className="rectangle" id="rectangle" style={{ display: this.state.showCropBox ? 'block' : 'none' }}>
+        <span id="left" className="left" style={{ top: this.state.pos.top + 'px', left: this.state.pos.left + 'px', height: this.state.pos.height + 'px' }} />
+        <span id="top" className="top" style={{ top: this.state.pos.top + 'px', left: this.state.pos.left + 'px', width: this.state.pos.width + 'px' }} />
+        <span id="right" className="right" style={{ top: this.state.pos.top + 'px', left: this.state.pos.left + this.state.pos.width + 'px', height: this.state.pos.height + 'px' }} />
+        <span id="bottom" className="bottom" style={{ top: this.state.pos.top + this.state.pos.height + 'px', left: this.state.pos.left + 'px', width: this.state.pos.width + 'px' }} />
+      </div>
       <div id="grooot" />
-      <div className="rectangle" id="rectangle" style={{ display: this.state.showCropBox ? 'block' : 'none', top: this.state.pos.top, left: this.state.pos.left, width: this.state.pos.width, height: this.state.pos.height }}/>
->>>>>>> Stashed changes
       <button onClick={this.handleCrop} >Crop</button>
       { this.state.imageSrc && <img src={this.state.imageSrc} /> }
     </div>)
